@@ -20,8 +20,8 @@ let appData = {   //ввожу объект appData, как требует за�
 for (let i=0; i<2;i++){
     let a = prompt('Введите обязательную статью расходов в этом месяце','Еда');
         b = prompt('Во сколько обойдется?','10000');
-        if (typeof(a)=== 'string' && typeof(a)!= null && typeof(b)!= null 
-        && a != '' && b != '' && a.length<50) {
+        if ((typeof(a)=== 'string') && (typeof(a)!= null) && (typeof(b)!= null) 
+        && (a != '') && (b != '') && a.length<50) {
             console.log('Done');
             appData.expenses[a] = b;  
         } else {
@@ -31,7 +31,7 @@ for (let i=0; i<2;i++){
             //ДЗ, что, вернуться на цикл обратно
             //надо вернуть пользователя на шаг назад!
         }
-};
+}
 appData.moneyPerDay = appData.budget/30;
 alert("Бюджет на 1 день: "+appData.moneyPerDay);
 
