@@ -1,6 +1,6 @@
 'use strict()'; //сторгий режим(современный)
 
-let money, time, fuser; //вводим 2 глобальные переменные
+let money, time; //вводим 2 глобальные переменные
 
 //HomeWork 6
 let startCountButton = document.getElementById('start'),//кнопка Начать расчет
