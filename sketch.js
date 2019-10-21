@@ -1,180 +1,84 @@
-'use strict()'; //сторгий режим(современный)
+window.addEventListener('DOMContentLoaded', function() { //после загрузки DOM-дерева назначаем событие
 
-let money, time, fuser; //вводим 2 глобальные переменные
+    'use strict';
+    let tab = document.querySelectorAll('.info-header-tab'), //все табы с .info-header-tab
+        info = document.querySelector('.info-header'), //элемент-родитель .info-header
+        tabContent = document.querySelectorAll('.info-tabcontent'); //тексты к табам .info-tabcontent
 
-//HomeWork 6
-let startCountButton = document.getElementById('start'),//кнопка Начать расчет
-    
-
-    budgetValueBlock = document.getElementsByClassName('budget-value')[0], //правое поле Бюджет
-    daybudgetValueBlock = document.getElementsByClassName('daybudget-value')[0], //правое поле Бюджет на 1 день
-    levelValueBlock = document.getElementsByClassName('level-value')[0], //правое поле Уровень дохода
-    expensesValueBlock = document.getElementsByClassName('expenses-value')[0], //правое поле Обязательные расходы
-    optionalexpensesValueBlock = document.getElementsByClassName('optionalexpenses-value')[0], //правое поле Возможные траты
-    incomeValueBlock = document.getElementsByClassName('income-value')[0], //правое поле Дополнительный доход
-    monthsavingsValueBlock = document.getElementsByClassName('monthsavings-value')[0], //правое поле Накопления за 1 месяц
-    yearsavingsValueBlock = document.getElementsByClassName('yearsavings-value')[0], //правое поле Накопления за 1 год
-
-    expensesInput = document.getElementsByClassName('expenses-item'), //поля ввода обязательных расходов
-
-    assert1Button = document.getElementsByTagName('button')[0],//1 кнопка "Утвердить"
-    
-    assert2Button = document.getElementsByTagName('button')[1],//2 кнопка "Утвердить"
-    
-    countButton = document.getElementsByTagName('button')[2],//кнопка "Рассчитать"
-    
-    
-    optionalexpensesInput = document.querySelectorAll('.optionalexpenses-item'); //поля необязательных расходов
-    
-
-    let otherInput = [];//массив под остальные поля
-    otherInput[0] = document.querySelector('#income'), //поле ввода возможного дохода
-    otherInput[1] = document.querySelector('#savings'), //чек-бокс "есть ли накопления"
-    otherInput[2] = document.querySelector('#sum'), //поле ввода суммы накоплений
-    otherInput[3] = document.querySelector('#percent'), //поле ввода процента
-    otherInput[4] = document.querySelector('.year-value'), //поле ввода года
-    otherInput[5] = document.querySelector('.month-value'), //поле ввода месяца
-    otherInput[6] = document.querySelector('.day-value'); //поле ввода дня
-    //console.log(otherInput);
-
-//HomeWork 7
-//кнопка Начать расчет
-startCountButton.addEventListener('click', function() {
-    // fuser = 1; //предохранитель снят - можно активировть остальные кнопки
-    money = +prompt('Ваш бюджет на месяц?', '20000'); //2 переменные для введенных пользователем данных
-    time = prompt('Введите дату в формате YYYY-MM-DD', '2019-09-17');
-    while (isNaN(money) || (money == '') || (money == null)) {
-        money = +prompt('Ваш бюджет на месяц?', '20000');
-        time = prompt('Введите дату в формате YYYY-MM-DD', '2019-09-17');
-    }
-    appData.budget = money;
-    appData.time = time;
-    budgetValueBlock.textContent = money.toFixed();
-    otherInput[4].value = new Date(Date.parse(time)).getFullYear();
-    otherInput[5].value = new Date(Date.parse(time)).getMonth() + 1;
-    otherInput[6].value = new Date(Date.parse(time)).getDate();
-    assert1Button.disabled = false; //делаем остальные кнопки активными
-    assert2Button.disabled = false; //делаем остальные кнопки активными
-    countButton.disabled = false; //делаем остальные кнопки активными
-});
-
-//кнопка 1 Утвердить
-assert1Button.disabled = true; //пока не нажмем кнопку "Начать расчет" - эта кнопка неактивна
-assert1Button.addEventListener('click', function(){
-    let sum = 0;    //сумма обязательных расходов
-    for (let i = 0; i < expensesInput.length; i++) {
-        let a = expensesInput[i].value;
-            b = expensesInput[++i].value;
-        if ((typeof (a) === 'string') && (typeof (a) != null) && (typeof (b) != null) &&
-            (a != '') && (b != '') && a.length < 50) {
-            appData.expenses[a] = b;
-            sum += +b;
-        } else {
-            alert('Введите корректные значения!');
-            i--;
+    function hideTabContent(a) { //функция, скрывающая контент табов(для начала)
+        for (let i = a; i < tabContent.length; i++) {
+            tabContent[i].classList.remove('show');
+            tabContent[i].classList.add('hide');
         }
     }
-    expensesValueBlock.textContent = sum; //записываем в поле "Обязательные расходы"
-    appData.budget = money-sum; //обновили значение бюджета в главном объекте
-    // budgetValueBlock.textContent = (money-sum).toFixed(); //вносим коррективы в "Доход"
 
-});
+    hideTabContent(1); //скрыли 2-4 таб, 1 остался видимым (0-ой, который)
 
-//кнопка 2 Утвердить
-assert2Button.disabled = true; //пока не нажмем кнопку "Начать расчет" - эта кнопка неактивна
-assert2Button.addEventListener('click', function() {
-    for (let i = 0; i < optionalexpensesInput.length; i++) {
-        //let a = optionalexpensesInput[i].value; переписал без использования переменной а
-        appData.optionalExpenses[i+1] = optionalexpensesInput[i].value;
-        optionalexpensesValueBlock.textContent += optionalexpensesInput[i].value + ' ';
-    }
-});
-
-//кнопка "Рассчитать"
-countButton.disabled = true; //пока не нажмем кнопку "Начать расчет" - эта кнопка неактивна
-countButton.addEventListener('click', function() {
-    if (appData.budget != undefined) {
-        appData.moneyPerDay = (appData.budget / 30).toFixed();
-        daybudgetValueBlock.textContent = appData.moneyPerDay;
-            if (appData.moneyPerDay < 100) {
-            levelValueBlock.textContent = 'Минимальный уровень достатка';
-        } else if (appData.moneyPerDay >= 100 && appData.moneyPerDay <= 2000) {
-            levelValueBlock.textContent = 'Средний уровень достатка';
-        } else if (appData.moneyPerDay > 2000) {
-            levelValueBlock.textContent = 'Высокий уровень достатка';
-        } else {
-            levelValueBlock.textContent = 'Ошибка';
+    function showTabContent(b) { //показываем содержимое табов
+        if (tabContent[b].classList.contains('hide')) {
+            tabContent[b].classList.remove('hide');
+            tabContent[b].classList.add('show');
         }
-    } else {
-        daybudgetValueBlock.textContent = 'Ошибка';
     }
-   
-});
 
-//Поле статьи возможного дохода
-otherInput[0].addEventListener('input', function() {
-    let items = otherInput[0].value;
-    appData.income=items.split(',');
-    incomeValueBlock.textContent = appData.income;
-});
+    info.addEventListener('click', function(event) { //при клике на определенный таб - показываем определенный контент ЕСЛИ ПРОЩЕ, то мы определяем НОМЕР ткнутого таба, скрываем все контенты, а затем показываем только нужный[i-ый] контент, совпадающий по номеру с ткнутым табом
+        let target = event.target;
+        if (target && target.classList.contains('info-header-tab')) { //если ткнули в элемент(существующий) и этот элемент ТОТ
+            for(let i = 0; i < tab.length; i++) { //итерируем по всем табам
+                if (target == tab[i]) { //к кликнутому пользователем элементу подобрали через итерацию нужный таб: 
+//                    РАЗВЁРНУТО: И дальше мы реализуем такую логику, что при клике на блок с классом info-header:
+// 1) идет проверка, что мы попали в блок, содержащий класс info-header-tab + то, что этот элемент вообще поддерживает событие клика ( if (target && target.classList.contains('info-header-tab')) { )
+// 2) Запускаем цикл, чтобы прогнать все табы по порядку (for(let i = 0; i < tab.length; i++))
+// 3) Теперь внутри цикла в условии мы проверяем что тот таб, в который тыкнул пользователь совпадает с итерируемым. И когда это условие выполнится - мы запускаем функцию показа именного этого таба. ( if (target == tab[i]) { )
+                    hideTabContent(0); //скрывает все табы, чтобы потом показать один, требуемый
+                    showTabContent(i); //показываем нужный таб
+                    break; //когда нашли и всё сделали, выходим из цикла, чтобы не проверять остальные, заведомо неподходящие варианты
+                }
+            }
+        }
+        
+    });
 
-//чек-бокс есть ли накопления
-otherInput[1].addEventListener('click', function(){
-    if (appData.savings == true){
-        appData.savings = false;
-    } else {
-        appData.savings = true;
+    //Timer
+    let deadline = '2019-11-01';
+
+    function getTimeRemainig(endtime) {
+        let t = Date.parse(endtime) - Date.parse(new Date()), //сколько осталось до дедлайна
+        seconds = Math.floor((t/1000)%60), //получаем количество целых секунд
+        minutes = Math.floor((t/1000/60)%60), //получаем количество целых минут
+        hours = Math.floor((t/1000/60/60)); //получаем количество целых часов
+        //days = Math.floor((t/1000/60/60/24)); //получаем количество целых дней
+
+        return { //возвращаем объект с данными об оставшемся до дедлайна времени
+            'total' : t, //все время в миллисекундах
+            'seconds' : seconds,
+            'minutes' : minutes,
+            'hours' : hours
+            //'days' : days
+        };
     }
-});
 
-//поле ввода суммы накоплений(в связке с процентом накоплений)
-otherInput[2].addEventListener('input', function(){
-    if (appData.savings == true) {
-        let sum = +otherInput[2].value; //накопления в месяц
-            percent = +otherInput[3].value; //процентная ставка
+    function setClock(id, endtime) {
+        let timer = document.getElementById('timer'),
+            hours = timer.querySelector('.hours'),
+            minutes = timer.querySelector('.minutes'),
+            seconds = timer.querySelector('.seconds'),
+            timerInterval = setInterval(updateClock,1000);
 
-        appData.monthIncome=sum/100/12*percent; //записываем в объект новое свойство monthIncome
-        appData.yearIncome=sum/100*percent; //записываем в объект новое свойство yearIncome
+            function updateClock() {
+                let t = getTimeRemainig(endtime);
+                    hours.textContent = t.hours;
+                    minutes.textContent = t.minutes;
+                    seconds.textContent = t.seconds;
 
-        monthsavingsValueBlock.textContent = appData.monthIncome.toFixed(1); //в правое поле накопления за 1 месяц
-        yearsavingsValueBlock.textContent = appData.yearIncome.toFixed(1); //в правое поле накопления за 1 год
+                    if (t.total <= 0){
+                    clearInterval(timerInterval);
+                    }
+
+            }
     }
+
+    setClock('timer', deadline);
 });
-
-//поле ввода процента накоплений(в связке с суммой накоплений)
-otherInput[3].addEventListener('input', function(){
-    if (appData.savings == true) {
-        let sum = +otherInput[2].value; //накопления в месяц
-            percent = +otherInput[3].value; //процентная ставка
-
-        appData.monthIncome=sum/100/12*percent; 
-        appData.yearIncome=sum/100*percent;
-
-        monthsavingsValueBlock.textContent = appData.monthIncome.toFixed(1);
-        yearsavingsValueBlock.textContent = appData.yearIncome.toFixed(1);
-    }
-});
-
-
-
-//HomeWork 2-3
-//задаем основной объект
-let appData = { //ввожу объект appData, как требует задание
-    budget: money,
-    timeData: time,
-    expenses: {},
-    optionalExpenses: {},
-    income: [],
-    savings: false,
-    
-};
-
-// 3) Используя цикл for in для объекта (appData) вывести 
-// в консоль сообщение "Наша программа включает в себя данные: 
-// " (вывести весь appData)
-console.log("Наша программа включает в себя данные: ");
-for (let key in appData){
-    console.log(key);
-}
 
 
