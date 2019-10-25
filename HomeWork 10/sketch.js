@@ -116,18 +116,18 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
         document.body.style.overflow = ''; //включаем прокрутку страницы на заднем фоне
     });   
 
-//     //Modal окно при нажатии кнопки "Унать подробнее" внизу контента
-//    let descriptionbtn = document.querySelectorAll('.description-btn'); //массив кнопок "узнать подробнее"
+    //Modal окно при нажатии кнопки "Унать подробнее" внизу контента
+   let descriptionbtn = document.querySelectorAll('.description-btn'); //массив кнопок "узнать подробнее"
 
-//     //перебираем все 4 кнопки "узнать подробнее" и назначаем на каждую прослушиватель как у кнопки "узнать больше"
-//     descriptionbtn.forEach(function(item){
-//         item.addEventListener('click', function(){
-//             overlay.style.display = 'block'; //развернуть форму
-//             more.classList.add('more-splash'); //анимация открытия
-//             document.body.style.overflow = 'hidden'; //отключаем прокрутку страницы на заднем фоне
-//             //а обработка крестика уже функционирует выше!
-//         });
-//     });
+    //перебираем все 4 кнопки "узнать подробнее" и назначаем на каждую прослушиватель как у кнопки "узнать больше"
+    descriptionbtn.forEach(function(item){
+        item.addEventListener('click', function(){
+            overlay.style.display = 'block'; //развернуть форму
+            more.classList.add('more-splash'); //анимация открытия
+            document.body.style.overflow = 'hidden'; //отключаем прокрутку страницы на заднем фоне
+            //а обработка крестика уже функционирует выше!
+        });
+    });
 
 
 });
