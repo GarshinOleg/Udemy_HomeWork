@@ -129,8 +129,6 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
         });
     });
 
-
-    
     //Form
 
     //объект с сообщениями выполнения запросов
@@ -143,9 +141,13 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
     //работаем с формой обратной связи 
     let form = document.querySelector('.main-form'), //сама форма
         input = form.getElementsByTagName('input'), //поле ввода
-        statusMessage = document.createElement('div'); //новый раздел, где будем писать о статусе запроса(снизу формы)
 
-        statusMessage.classList.add('status'); //добавляем класс СТУТУС к новому разделу в форме
+        //по заданию тоже самое, только для контактной формы
+        contactForm = document.querySelector('#form'), //сама контакная форма(та, что снизу)
+        contactInput = contactForm.getElementsByTagName('input'), //поле ввода для контакной формы
+        
+        statusMessage = document.createElement('div'); //новый раздел, где будем писать о статусе запроса(снизу формы)
+        statusMessage.classList.add('status'); //добавляем класс СТАТУС к новому разделу в форме
 
         form.addEventListener('submit', function(event){ //при нажатии на отправить - форма отправляется
         event.preventDefault(); //чтобы страница не обновлялась(убираем стандартное поведение браузера)
@@ -180,6 +182,45 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
         //очищаем вся поля ввода после отправки запроса
         for (let i = 0; i > input.length; i++) { 
             input[i].value = '';
+        }
+
+    });
+
+    //по заданию для контактной формы !!! -------------------!---------------------------------
+
+    contactForm.addEventListener('submit', function(event){ //при нажатии на отправить - форма отправляется
+        event.preventDefault(); //чтобы страница не обновлялась(убираем стандартное поведение браузера)
+        
+        contactForm.appendChild(statusMessage); //добавляем в форму наш div
+
+        let request = new XMLHttpRequest(); //начинаем описывать и отправлять запрос
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        let formData = new FormData(contactForm); //создаем объект formData
+
+        //превращаем formData в JSON-объект
+        let obj = {}; //создаем пустой JS-объект
+        formData.forEach(function(value, key){
+            obj[key] =  value;  //методом forEach вносим из formData в пустой JS-объект значения
+        });
+        let json = JSON.stringify(obj); //превращаем наш JS-объект в JSON-объект
+
+        request.send(json); //отправляем JSON-объект
+
+        request.addEventListener('readystatechange', function(){ //показ в сообщении статуса запроса
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading; //"загрузка", если не загрузился
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message.success; //"успех", если загрузился
+            } else {
+                statusMessage.innerHTML = message.failure; //"ошибка", если произошла ошибка
+            }
+        });
+
+        //очищаем вся поля ввода после отправки запроса
+        for (let i = 0; i > contactInput.length; i++) { 
+            contactInput[i].value = '';
         }
 
     });
