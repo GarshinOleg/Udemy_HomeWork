@@ -1,55 +1,51 @@
-// {
-//     const ARR = [5, 6];
-//     ARR.push(7);
-//     console.log(ARR); // [5,6,7]
-//     ARR = '10'; // TypeError
-//     ARR[0] = 3; // значение можно менять
-//     console.log(ARR); // [3,6,7]
-// }
+// // class GreatPerson extends Person {
+// //     constructor(name, phrase) {
+// //       super(name);
+// //       this.phrase = phrase;
+// //     }
+// //     sayPhrase() {
+// //       console.log(`${this.name} says: "${this.phrase}"`)
+// //     }
+// //   }
+  
+// //   const jane = new GreatPerson('Jane', 'Hello, World!');
+// //   jane.sayName(); // Person Jane said his name
+// //   jane.sayPhrase(); // Jane says: "Hello, World!"
 
-// let w = new WeakMap();
-// //w.set('a', 'b');
-// // Uncaught TypeError: Invalid value used as weak map key
+// //'use strict';
+// // let user = {
+// //   get fullName() {
+// //     return `...`;
+// //   }
+// // };
+// // user.fullName = "Тест";
 
-// var o1 = {},
-//     o2 = function(){},
-//     o3 = {};
+// let user = {
+//   name: "John",
+//   surname: "Smith",
 
-// w.set(o1, 37);
-// w.set(o2, "azerty");
-// w.set(o3, undefined);
-// console.log(w.get(o1));
-// w.get(o3); // undefined, потому что это заданное значение
+//   get fullName() {
+//     return `${this.name} ${this.surname}`;
+//   },
 
-// w.has(o1); // true
-// w.delete(o1);
-// w.has(o1); // false
+//   set fullName(value) {
+//     [this.name, this.surname] = value.split(" ");
+//   }
+// };
 
+// // set fullName запустится с данным значением
+// user.fullName = "Alice Cooper";
 
-// 'use strict';
-// let alf = 'алфавит';
-// console.log(alf);
-// alf.toUpperCase();
-// console.log(alf);
+// alert(user.name); // Alice
+// alert(user.surname); // Cooper
 
-// let bar = "алфавит";
-// console.log(bar);               
-// bar.toUpperCase();
-// console.log(bar);
-
-class Car {
-    constructor() {
-        console.log("Создаём новый автомобиль");
-    }
-}
-
-class Porsche extends Car {
-    constructor() {
-        //super();
-        console.log("Создаём Porsche");
-    }
-}
-
-let c = new Porsche();
-// Создаём новый автомобиль
-// Создаём Porsche
+function beginAdding(a) {
+  a *= 5;
+  return function (b) {
+  console.log(a + b);
+  }
+  }
+  const add = beginAdding(10);
+  console.log(add);
+  console.log(typeof(add));
+  //add(20);
