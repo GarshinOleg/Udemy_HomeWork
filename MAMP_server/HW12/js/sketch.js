@@ -131,74 +131,6 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
 
     //Form ---------------------серверные запросы------------------------------------------------------------------
 
-    // let message = {
-    //     loading: "Загрузка...",
-    //     sucsess: "Спасибо! Скоро мы с Вами свяжемся!",
-    //     failure: "Что-то пошло не так..."
-    // };
-    
-    // let form = document.querySelector('.main-form'),
-    //     formDown = document.querySelector('#form'),
-    //     input = form.getElementsByTagName ('input'),
-    //     statusMessage = document.createElement('div');
-         
-    
-    //     statusMessage.classList.add('status');
-    
-    // function sendForm(elem){
-    
-    //     elem.addEventListener('submit', function (event) {
-    //         event.preventDefault();
-    //         elem.appendChild(statusMessage);
-        
-    //         let formData = new FormData(elem);
-        
-    //     function postData() {
-    //         return new Promise(function (resolve, reject) {
-    //             let request = new XMLHttpRequest();
-    //             request.open('POST', 'server.php');
-    //             request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        
-    //             request.onreadystatechange = function () {
-    //                 if(request.readyState < 4) {
-    //                     resolve();
-    //                 } else if (request.readyState === 4) {
-    //                     if (request.status == 200 && request.status < 300) {
-    //                         resolve();
-    //                     } else {
-    //                         reject();
-    //                     }
-    //                 }
-    //             };
-        
-    //             let obj = {};
-    //             formData.forEach (function (value, key) {
-    //                 obj[key] = value;
-    //             });
-    //             let json = JSON.stringify(obj);
-    //             request.send(json);
- 
-    //         });
-    //     }
-        
-    //     function clearInput() {
-    //         for (let i = 0; i < input.length; i++) {
-    //             input[i].value = '';
-    //         }
-    //     }
-        
-    //     postData (formData)
-    //         .then (() => statusMessage.innerHTML = message.loading)
-    //         .then (() => statusMessage.innerHTML = message.sucsess)
-    //         .catch (() => statusMessage.innerHTML = message.failure)
-    //         .then (clearInput);
-    //     });
- 
-    // }
-    
-    // sendForm(form);
-    // sendForm(formDown);
-
     //объект с сообщениями выполнения запросов
     let message = { 
         loading: 'Загрузка...',
@@ -217,7 +149,7 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
             for (let i = 0; i < input.length; i++) { 
                 input[i].value = '';
             }
-            alert('Поля очистились!');
+            //alert('Поля очистились!');
         }    
 
         form.addEventListener('submit', function(event){ //при нажатии на отправить - форма отправляется
@@ -255,8 +187,6 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
         }); //конец промиса            
 
             } //конец функции smartRequest 
-
-            
 
             smartRequest(form)   //запускаем функцию smartRequest
             .then(() => statusMessage.innerHTML = message.success) //в случае успеха промиса
@@ -308,9 +238,9 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
             
             function clearInputContact(){
                 for (let i = 0; i < contactInput.length; i++) { 
-                    contactInput[i].value = ''
+                    contactInput[i].value = '';
                 }
-                alert('Поля очистились!');
+                //alert('Поля очистились!');
             }
 
             smartRequestContact()   //запускаем функцию smartRequest
@@ -322,6 +252,52 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
 
     }); //конец прослушивателя формы
 
+
+    //Slider ----------------------------------------------- Slider ------------------------------------------------
+    let slideIndex = 1,  //индекс текущего слайда
+        slides = document.querySelectorAll('.slider-item'), //сами слайды
+        prev = document.querySelector('.prev'), //стрелочка НАЗАД
+        next = document.querySelector('.next'), //стрелочка ВПЕРЕД
+        dotsWrap = document.querySelector('.slider-dots'), //обёртка точек слайдера(тот раздел, где точки)
+        dots = document.querySelectorAll('.dot'); //сами точки
+
+    showSlides(slideIndex); //запускаем показ слайдов
+
+    function showSlides(n) {
+        if (n > slides.length) {  //чтобы перематывалось в начало, если дошло до конца
+            slideIndex = 1;
+        }
+        if (n < 1){ //чтобы перематывалось в конец, если нажали стрелку НАЗАД, когда стоит 1 слайд
+            slideIndex = slides.length;
+        }
+        slides.forEach((item) => item.style.display = 'none'); //сначала скрываем все слайды
+        dots.forEach((item) => item.classList.remove('dot-active')); //убираем "активность" с любых точек
+        slides[slideIndex - 1].style.display = 'block'; //показываем нужный слайд
+        dots[slideIndex - 1].classList.add('dot-active'); //активируется нужная точка(она становится черной и ее не видно)
+    }
+
+        function plusSlides(n){  //показ следующего слайда
+            showSlides(slideIndex += n);
+        }
+        function currentSlide(n){ //показ текущего слайда
+            showSlides(slideIndex = n);
+        }
+
+        prev.addEventListener('click', function(){  //при нажатии на стрелку НАЗАД - показ прдыдущего слайда
+            plusSlides(-1);
+        });
+        next.addEventListener('click', function(){ //при нажатии на стрелку ВПЕРЕД - показ следующего слайда
+            plusSlides(1);
+        });
+
+        dotsWrap.addEventListener('click', function(event) {
+            for (let i = 0; i < dots.length + 1; i++) {
+                if (event.target.classList.contains('dot') && event.target == dots[i-1]) {
+                    currentSlide(i);
+                }
+            }
+        });
+    
 });
 
 
