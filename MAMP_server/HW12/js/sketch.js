@@ -267,12 +267,12 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
         if (n > slides.length) {  //чтобы перематывалось в начало, если дошло до конца
             slideIndex = 1;
         }
-        if (n < 1){ //чтобы перематывалось в конец, если нажали стрелку НАЗАД, когда стоит 1 слайд
+        if (n < 1){ //чтобы перематывалось в конец, если нажали стрелку НАЗАД, когда стоит первый слайд
             slideIndex = slides.length;
         }
         slides.forEach((item) => item.style.display = 'none'); //сначала скрываем все слайды
         dots.forEach((item) => item.classList.remove('dot-active')); //убираем "активность" с любых точек
-        slides[slideIndex - 1].style.display = 'block'; //показываем нужный слайд
+        slides[slideIndex - 1].style.display = 'block'; //показываем нужный слайд(сначала первый)
         dots[slideIndex - 1].classList.add('dot-active'); //активируется нужная точка(она становится черной и ее не видно)
     }
 
@@ -290,14 +290,57 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
             plusSlides(1);
         });
 
-        dotsWrap.addEventListener('click', function(event) {
-            for (let i = 0; i < dots.length + 1; i++) {
-                if (event.target.classList.contains('dot') && event.target == dots[i-1]) {
-                    currentSlide(i);
+        dotsWrap.addEventListener('click', function(event) { //при клике на точке - показывается соответствующий слайдер
+            for (let i = 0; i < dots.length + 1; i++) { //перебираем все слайдеры
+                if (event.target.classList.contains('dot') && event.target == dots[i-1]) {  //делегирование, i-1, потому что  slideIndex д.б. от 1 до 4, это номер слайда, а не индекс массива
+                    currentSlide(i);  //показать нужный слайдер
                 }
             }
         });
     
+        //Калькуятор на сайте
+        let persons = document.querySelectorAll('.counter-block-input')[0], //поле Количество людей
+            restDays = document.querySelectorAll('.counter-block-input')[1], //поле На сколько дней
+            place = document.getElementById('select'), //выбор базы отдыха
+            totalValue = document.getElementById('total'), //ощая сумма
+            personsSum = 0, //переменная для Количество людей
+            daysSum = 0, //переменная Количество дней
+            total = 0; //переменная общей суммы
+
+            totalValue.innerHTML = 0; //зануляем сумму на сайте
+
+            persons.addEventListener('change', function(){  //при вводе в поле Количество людей считается сумма, с проверка ненулевого второго поля
+                personsSum = +this.value;
+                total = (personsSum+daysSum)*4000;
+
+                if (restDays.value == '' || persons.value == ''){
+                    totalValue.innerHTML = 0;
+                } else {
+                    totalValue.innerHTML = total;
+                }
+            });
+
+            restDays.addEventListener('change', function(){ //при вводе в поле На сколько дней считается сумма, с проверка ненулевого второго поля
+                daysSum = +this.value;
+                total = (personsSum+daysSum)*4000;
+
+                if (persons.value == '' || restDays.value == ''){
+                    totalValue.innerHTML = 0;
+                } else {
+                    totalValue.innerHTML = total;
+                }
+            });
+
+            place.addEventListener('change', function(){ //изменение суммы при выборе базы
+                if (restDays.value == '' || persons.value == '') { //если какое то из полей пустые - занулять сумму
+                    totalValue.innerHTML = 0;
+                } else {
+                    let a = total; //сумма, но она идет в качестве переменной, так что каждый раз будет такая же
+                    totalValue.innerHTML = a * this.options[this.selectedIndex].value; //умножаем сумму на К-т базы
+                }
+            });
+
+
 });
 
 
