@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', function() { //после загру
     });
 
     //Timer
-    let deadline = '2019-12-01 00:00';
+    let deadline = '2019-12-31 00:00';
 
     function getTimeRemainig(endtime) {
         let t = Date.parse(endtime) - Date.parse(new Date()), //сколько осталось до дедлайна
